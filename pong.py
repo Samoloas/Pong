@@ -57,13 +57,13 @@ result = streamlit_bokeh_events(
     debounce_time=0)
 
 if result:
-  if "GET_TEXT" in result:
-    st.write(result.get("GET_TEXT"))
-    if "GET_TEXT" == "fuego" or "barrera":
-        # MQTT Broker Configuration
-        broker = "broker.mqttdashboard.com"  # Replace with your broker address
-        port = 1883  # Replace with your broker port
-        topic = "pong-commands"  # Replace with your topic name
+    if "GET_TEXT" in result:
+        st.write(result.get("GET_TEXT"))
+        if "GET_TEXT" == "fuego" or "barrera":
+            # MQTT Broker Configuration
+            broker = "broker.mqttdashboard.com"  # Replace with your broker address
+            port = 1883  # Replace with your broker port
+            topic = "pong-commands"  # Replace with your topic name
 
         # Create MQTT client
         client = paho.Client("pong-player")
