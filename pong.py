@@ -31,25 +31,25 @@ stt_button = Button(label="J1", width=200)
 
 stt_button.js_on_event("button_click", CustomJS(code="""
  var recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
+ recognition.continuous = true;
+ recognition.interimResults = true;
  
-  recognition.onresult = function (e) {
-    var value = "";
-    for (var i = e.resultIndex; i < e.results.length; ++i) {
-      if (e.results[i].isFinal) {
-        value += e.results[i][0].transcript;
-      }
-    }
-    if ( value != "") {
-      document.dispatchEvent(new CustomEvent("GET_TEXT", {detail: value}));
-    }
+ recognition.onresult = function (e) {
+  var value = "";
+  for (var i = e.resultIndex; i < e.results.length; ++i) {
+   if (e.results[i].isFinal) {
+    value += e.results[i][0].transcript;
+   }
   }
-  recognition.start();
-  """))
+  if ( value != "") {
+   document.dispatchEvent(new CustomEvent("GET_TEXT", {detail: value}));
+  }
+ }
+ recognition.start();
+ """))
 
 result = streamlit_bokeh_events(
-    stt_button,  # Removed the non-breaking space here
+    stt_button,
     events="GET_TEXT",
     key="listen",
     refresh_on_update=False,
@@ -57,32 +57,33 @@ result = streamlit_bokeh_events(
     debounce_time=0)
 
 if result:
-    if "GET_TEXT" in result:
-        st.write(result.get("GET_TEXT"))
-        if "GET_TEXT" == "fuego" or "barrera":
+    if "GET_TEXT" in result:  # Removed the non-breaking space here
+        st.write(result.get("GET_TEXT"))
+        if "GET_TEXT" == "fuego" or "barrera":
             # MQTT Broker Configuration
             broker = "broker.mqttdashboard.com"  # Replace with your broker address
             port = 1883  # Replace with your broker port
             topic = "pong-commands"  # Replace with your topic name
 
-        # Create MQTT client
-        client = paho.Client("pong-player")
+            # Create MQTT client
+            client = paho.Client("pong-player")
 
-        # Define on_publish callback
-        def on_publish(client, userdata, mid, status):
-            if status == 0:
-                print("Message published successfully")
-            else:
-                print("Failed to publish message")
+            # Define on_publish callback
+            def on_publish(client, userdata, mid, status):
+                if status == 0:
+                    print("Message published successfully")
+                else:
+                    print("Failed to publish message")
 
-        # Connect to MQTT broker
-        client.connect(broker, port)
+            # Connect to MQTT broker
+            client.connect(broker, port)
 
-        # Prepare message to publish
-        poder = json.dumps({"poder": result.get("GET_TEXT")})
+            # Prepare message to publish
+            poder = json.dumps({"poder": result.get("GET_TEXT")})
 
-        # Publish message to the topic
-        client.publish(topic, poder)
+            # Publish message to the topic
+            client.publish(topic, poder)
 
-        # Disconnect from MQTT broker
-        client.disconnect()
+            # Disconnect from MQTT broker
+            client.disconnect()
+
