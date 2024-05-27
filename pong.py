@@ -23,7 +23,7 @@ st.image(image)
 st.write("Fuego")
 image = Image.open('shield.png')
 st.image(image)
-st.write("barrera")
+st.write("Barrera")
 
 
 st.write("Toca el Botón y di el hechizo")
@@ -59,7 +59,7 @@ result = streamlit_bokeh_events(
 if result:
     if "GET_TEXT" in result:  # Removed the non-breaking space here
         st.write(result.get("GET_TEXT"))
-        if "GET_TEXT" == "fuego" or "barrera":
+        if "GET_TEXT" == "Fuego" or "Barrera":
             # MQTT Broker Configuration
             broker = "broker.mqttdashboard.com"  # Replace with your broker address
             port = 1883  # Replace with your broker port
