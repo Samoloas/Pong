@@ -63,10 +63,10 @@ if result:
             # MQTT Broker Configuration
             broker = "broker.mqttdashboard.com"  # Replace with your broker address
             port = 1883  # Replace with your broker port
-            topic = "pong-commands"  # Replace with your topic name
+            topic = "Pong"  # Replace with your topic name
 
             # Create MQTT client
-            client = paho.Client("pong-player")
+            client = paho.Client("Pong-player")
 
             # Define on_publish callback
             def on_publish(client, userdata, mid, status):
