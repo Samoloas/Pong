@@ -59,7 +59,7 @@ result = streamlit_bokeh_events(
 if result:
   if "GET_TEXT" in result:
     st.write(result.get("GET_TEXT"))
-   if "GET_TEXT" == "fuego" or "barrera":
+    if "GET_TEXT" == "fuego" or "barrera":
         # MQTT Broker Configuration
         broker = "broker.mqttdashboard.com"  # Replace with your broker address
         port = 1883  # Replace with your broker port
