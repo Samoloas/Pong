@@ -66,7 +66,11 @@ if result:
             topic = "Pong"  # Replace with your topic name
 
             # Create MQTT client
-            client = paho.Client("Pong-player")
+            client = paho.Client("Pong")
+            client1.on_message = on_message
+            client1.on_publish = on_publish                          
+            client1.connect(broker,port)  
+            message =json.dumps({"poder":poder})
 
             # Define on_publish callback
             def on_publish(client, userdata, mid, status):
