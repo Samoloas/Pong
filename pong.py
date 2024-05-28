@@ -12,6 +12,11 @@ import glob
 
 from gtts import gTTS
 
+broker="broker.mqttdashboard.com"
+port=1883
+client1= paho.Client("Pong")
+client1.on_message = on_message
+
 st.title("Final Interfaces multimodales")
 st.subheader("Poderes Pong")
 
@@ -59,35 +64,35 @@ result = streamlit_bokeh_events(
 if result:
     if "GET_TEXT" in result:  # Removed the non-breaking space here
         st.write(result.get("GET_TEXT"))
-        if "GET_TEXT" == "Fuego" or "Barrera":
-            # MQTT Broker Configuration
-            broker = "broker.mqttdashboard.com"  # Replace with your broker address
-            port = 1883  # Replace with your broker port
-            topic = "Pong"  # Replace with your topic name
+        
+        # MQTT Broker Configuration
+        broker = "broker.mqttdashboard.com"  # Replace with your broker address
+        port = 1883  # Replace with your broker port
+        topic = "Pong"  # Replace with your topic name
 
             # Create MQTT client
-            client = paho.Client("Pong")
-            client1.on_message = on_message
-            client1.on_publish = on_publish                          
-            client1.connect(broker,port)  
-            message =json.dumps({"poder":poder})
+        client = paho.Client("Pong")
+        client1.on_message = on_message
+        client1.on_publish = on_publish                          
+        client1.connect(broker,port)  
+        message =json.dumps({"poder":poder})
 
-            # Define on_publish callback
-            def on_publish(client, userdata, mid, status):
-                if status == 0:
-                    print("Message published successfully")
-                else:
-                    print("Failed to publish message")
+        # Define on_publish callback
+        def on_publish(client, userdata, mid, status):
+            if status == 0:
+                print("Message published successfully")
+            else:
+                print("Failed to publish message")
 
-            # Connect to MQTT broker
-            client.connect(broker, port)
+        # Connect to MQTT broker
+        client.connect(broker, port)
 
-            # Prepare message to publish
-            poder = json.dumps({"poder": result.get("GET_TEXT")})
+        # Prepare message to publish
+        poder = json.dumps({"poder": result.get("GET_TEXT")})
 
-            # Publish message to the topic
-            client.publish(topic, poder)
+        # Publish message to the topic
+        client.publish(topic, poder)
 
-            # Disconnect from MQTT broker
-            client.disconnect()
+        # Disconnect from MQTT broker
+        client.disconnect()
 
