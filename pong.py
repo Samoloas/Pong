@@ -29,8 +29,8 @@ client.on_message = on_message
 # Improved Connection Handling (consider persistent connection)
 def connect_and_publish(recognized_text):
     client.connect(broker, port)
-    poder = json.dumps({"poder": recognized_text})
-    client.publish(topic, poder)  # Publish the message with the recognized power
+    poder = recognized_text  # Use recognized_text directly
+    client.publish(topic, poder)
 
 st.title("Final Interfaces Multimodales")
 st.subheader("Poderes Pong")
