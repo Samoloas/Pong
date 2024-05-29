@@ -26,11 +26,15 @@ port = 1883
 client = paho.Client("Pong")
 client.on_message = on_message
 
-# Improved Connection Handling (consider persistent connection)
 def connect_and_publish(recognized_text):
-    client.connect(broker, port)
-    poder = recognized_text  # Use recognized_text directly
-    client.publish(topic, poder)
+    try:
+        client.connect(broker, port)
+        poder = recognized_text  # Use recognized_text directly
+        client.publish(topic, poder)
+    except ConnectionRefusedError:
+        st.error("Error connecting to MQTT broker. Please check broker address and port.")
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
 
 st.title("Final Interfaces Multimodales")
 st.subheader("Poderes Pong")
@@ -69,13 +73,12 @@ stt_button.js_on_event("button_click", CustomJS(code="""
  """))
 
 result = streamlit_bokeh_events(
-    stt_button,  # Remove the non-breaking space here
-    events="GET_TEXT",
-    key="listen",
-    refresh_on_update=False,
-    override_height=75,
-    debounce_time=0)
-
+  stt_button,
+  events="GET_TEXT",
+  key="listen",
+  refresh_on_update=False,
+  override_height=75,
+  debounce_time=0)
 
 if result:
     if "GET_TEXT" in result:
@@ -85,7 +88,7 @@ if result:
         # Publish the message with the recognized power
         connect_and_publish(recognized_text)
 
-        # Consider adding post-processing or feedback after publishing
+
 
 
         
