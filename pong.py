@@ -26,6 +26,8 @@ port = 1883
 client = paho.Client("Pong")
 client.on_message = on_message
 
+topic = "pong/poderes"
+
 def connect_and_publish(recognized_text):
     try:
         client.connect(broker, port)
