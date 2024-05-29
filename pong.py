@@ -12,10 +12,26 @@ import glob
 
 from gtts import gTTS
 
+def on_publish(client,userdata,result):            
+    print("el dato ha sido publicado \n")
+    pass
+
+def on_message(client, userdata, message):
+    global message_received
+    message_received=str(message.payload.decode("utf-8"))
+    st.write(message_received)
+
+
 broker="broker.mqttdashboard.com"
 port=1883
-client1= paho.Client("Pong")
-client1.on_message = on_message
+client= paho.Client("Pong")
+client.on_message = on_message
+
+# Connect to MQTT broker
+client.connect(broker, port)
+
+# Publish message to the topic
+client.publish(topic, poder)
 
 st.title("Final Interfaces multimodales")
 st.subheader("Poderes Pong")
@@ -64,35 +80,12 @@ result = streamlit_bokeh_events(
 if result:
     if "GET_TEXT" in result:  # Removed the non-breaking space here
         st.write(result.get("GET_TEXT"))
-        
-        # MQTT Broker Configuration
-        broker = "broker.mqttdashboard.com"  # Replace with your broker address
-        port = 1883  # Replace with your broker port
-        topic = "Pong"  # Replace with your topic name
 
-            # Create MQTT client
-        client = paho.Client("Pong")
-        client1.on_message = on_message
-        client1.on_publish = on_publish                          
-        client1.connect(broker,port)  
-        message =json.dumps({"poder":poder})
-
-        # Define on_publish callback
-        def on_publish(client, userdata, mid, status):
-            if status == 0:
-                print("Message published successfully")
-            else:
-                print("Failed to publish message")
-
-        # Connect to MQTT broker
-        client.connect(broker, port)
-
-        # Prepare message to publish
+        client.on_message = on_message
+        client.on_publish = on_publish                          
+        client.connect(broker,port)  
         poder = json.dumps({"poder": result.get("GET_TEXT")})
+        message =json.dumps({poder})
 
-        # Publish message to the topic
-        client.publish(topic, poder)
-
-        # Disconnect from MQTT broker
-        client.disconnect()
+        
 
